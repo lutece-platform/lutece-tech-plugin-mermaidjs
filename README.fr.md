@@ -9,19 +9,19 @@
 
 ## Introduction
 
-Mermaid Js (MIT license) generic import for rendering workflows or process
+Import générique de la bibliothèque MermaidJs (license MIT) pour génération de rendus graphiques de workflows ou processus.
 
-Examples: https://mermaid-js.github.io/mermaid-live-editor
+Exemples en ligne de rendus graphiques : https://mermaid-js.github.io/mermaid-live-editor
 
 Documentation : https://mermaid-js.github.io/mermaid
 
 ## Configuration
 
-No configuration needed
+Aucune configuration nécessaire;
 
 ## Usage
 
-Mermaid Js macro integration example :
+Utilisation des macros Mermaid Js :
 <@importMermaidJs /> ... <div class="mermaid">graph TD (...)</div> ... <@initMermaidJs />
 
 [Maven documentation and reports](https://dev.lutece.paris.fr/plugins/plugin-mermaidjs/)

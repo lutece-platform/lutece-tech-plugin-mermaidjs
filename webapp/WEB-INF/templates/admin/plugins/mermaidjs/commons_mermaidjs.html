@@ -1,0 +1,21 @@
+<#-- Mermaid Js macro integration  :
+ #      - Call @importMermaidJs first
+ #      - create a DIV like <div class="mermaid" >graph TD (...)</div>
+ #      - Call @initMermaidJs
+-->
+<#macro importMermaidJs >
+ <#if mermaidIsLoaded?? && mermaidIsLoaded>
+ <#else>
+ <script src="js/util/mermaid.min.js"></script>
+ </#if>
+ <#assign mermaidIsLoaded = true />
+</#macro>
+<#macro initMermaidJs >
+ <#if mermaidIsInitialized?? && mermaidIsInitialized>
+ <#else>
+ <script>
+        mermaid.initialize({ startOnLoad: true });
+ </script>
+ </#if>
+ <#assign mermaidIsInitialized = true />
+</#macro> 

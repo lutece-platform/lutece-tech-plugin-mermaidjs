@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Plugin mermaidjs</title>
+    </properties>
+    <head>
+        <!-- Keywords example : "cms, authentication, cms, workflow, seo, collaborative, ..." 
+             Use the language of this xdoc -->
+        <meta name="keywords" content="graph, workflow, render, process" />
+    </head>
+    <body>
+        <section name="Plugin mermaidjs">
+            <p>
+                <img src="images/admin/plugins/mermaidjs/workflow-icon.png" />
+            </p>
+            <subsection name="Introduction">
+                <p>Mermaid Js (MIT license) generic import for rendering workflows or process</p>
+                
+                <p>Examples: https://mermaid-js.github.io/mermaid-live-editor</p>
+                <p>Documentation : https://mermaid-js.github.io/mermaid</p>
+            </subsection>
+            <subsection name="Configuration">
+                <p>No configuration needed</p>
+            </subsection>
+            <subsection name="Usage">
+                <p>Mermaid Js macro integration example :</p>
+                <source><![CDATA[ 
+                <@importMermaidJs />
+                ...
+                <div class="mermaid">graph TD (...)</div>
+                ... 
+                <@initMermaidJs /> 
+                ]]></source>
+            </subsection>
+        </section>
+    </body>
+</document>
+
