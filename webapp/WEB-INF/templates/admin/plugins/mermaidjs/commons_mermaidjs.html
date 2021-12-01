@@ -3,19 +3,133 @@
  #      - create a DIV like <div class="mermaid" >graph TD (...)</div>
  #      - Call @initMermaidJs
 -->
-<#macro importMermaidJs >
- <#if mermaidIsLoaded?? && mermaidIsLoaded>
- <#else>
- <script src="js/util/mermaid.min.js"></script>
- </#if>
- <#assign mermaidIsLoaded = true />
+<#macro importMermaidJs zoom=true>
+<#if mermaidIsLoaded?? && mermaidIsLoaded>
+<#else>
+<script src="js/admin/lib/mermaid/mermaid.min.js"></script>
+<#if zoom>
+<script src="js/admin/lib/mermaid/svg-pan-zoom.js"></script>
+<style>
+#pane-graph .mermaid{
+       animation: mermaid-in  .5s ease-in-out .5s forwards;
+}
+
+@keyframes  mermaid-in {
+       0% {
+       filter: blur(4px);
+       opacity: 0;
+       }
+       100% {
+       filter: blur(0px);
+       opacity: 1;
+       }
+}
+</style>
+</#if>
+</#if>
+<#assign mermaidIsLoaded = true />
 </#macro>
-<#macro initMermaidJs >
- <#if mermaidIsInitialized?? && mermaidIsInitialized>
- <#else>
- <script>
-        mermaid.initialize({ startOnLoad: true });
- </script>
- </#if>
- <#assign mermaidIsInitialized = true />
+<#macro initMermaidJs zoom=true>
+<#if mermaidIsInitialized?? && mermaidIsInitialized>
+<#else>
+<style>
+[id*="mermaid-"]:hover{
+       cursor: grab;
+}
+</style>
+<script>
+// Zoom management
+window.onload = function() {
+       var config = {
+              startOnLoad:true,
+              securityLevel:'loose',
+       };
+       mermaid.initialize(config);
+       <#if zoom>
+       window.mermaidZoom = svgPanZoom('[id*="mermaid-"]', {
+              zoomEnabled: true,
+              controlIconsEnabled: false,
+              fit: true,
+              // center: true,
+       });
+       document.getElementById('zoom-in').addEventListener('click', function(ev){
+              ev.preventDefault()
+              mermaidZoom.zoomIn()
+       });
+
+       document.getElementById('zoom-out').addEventListener('click', function(ev){
+              ev.preventDefault()
+              mermaidZoom.zoomOut()
+       });
+
+       document.getElementById('reset').addEventListener('click', function(ev){
+              ev.preventDefault()
+              mermaidZoom.resetZoom()
+       });
+       </#if>
+};
+
+// This SVG data is copied from
+// A data URL can also be generated from an existing SVG element.
+function svgDataURL(svg) {
+const svgAsXML = (new XMLSerializer).serializeToString(svg);
+return "data:image/svg+xml," + encodeURIComponent(svgAsXML);
+}
+
+$( function(){
+       $('.download-button').click( function(e){
+              const svg = document.querySelector('.mermaid > svg');
+              $(this).attr( "href", svgDataURL( svg ));
+              const fileName=document.querySelector('[name="name"]').value;
+              $(this).attr("download", fileName );
+       })          
+})
+</script>
+</#if>
+<#assign mermaidIsInitialized = true />
+</#macro> 
+<#macro mermaidGraph zoomControls=true zoomPos='top' zoomAlign='end' download=true>
+<#local align='justify-content-${zoomAlign} is-justify-content-${zoomAlign}' />
+<#if zoomPos='top'>
+<@div class='d-flex is-flex ${align} '>
+       <#if zoomControls>
+       <@mermaidToolBar />
+       </#if>
+       <#if download>
+              <a href="" class="btn btn-info btn-sm download-button" title="Download as SVG file." download="test.svg" target="_blank">
+                     <i class="fas fa-download"></i>
+              </a>
+       </#if>
+</@div>
+</#if>
+<@div class='mermaid' params=' style="opacity:0"'>${mdgraph}</@div>
+<#if zoomPos !='top'>
+<@div class='d-flex is-flex ${align}'>
+       <#if zoomControls >
+       <@mermaidToolBar />
+       </#if>
+       <#if download>
+              <a href="" class="download-button" title="Download as SVG file." download>
+                     <i class="fas fa-download"></i>
+              </a>
+       </#if>
+</@div>
+</#if>
+</#macro> 
+<#macro mermaidToolBar>
+<@button color='default' id='zoom-in' title='#i18n{mermaidjs.zoomIn}' buttonIcon='search-minus'  />
+<@button color='default' id='zoom-out' title='#i18n{mermaidjs.zoomOut}'  buttonIcon='search-plus' />
+<@button color='default' id='reset' title='#i18n{mermaidjs.reset}' buttonIcon='search' />
+</#macro> 
+<#macro mermaidHelp zoom=true download=true>
+<@box class='text-white bg-info'>
+<@boxHeader title='#i18n{mermaidjs.help.title}'  />
+<@boxBody class='text-dark'>
+<@ul>
+#i18n{mermaidjs.help.info}
+<#if zoom>#i18n{mermaidjs.help.zoom}</#if>
+<#if download>#i18n{mermaidjs.help.download}</#if>
+</@ul>
+</@boxBody>
+</@box>
 </#macro> 
