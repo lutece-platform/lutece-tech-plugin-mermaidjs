@@ -13,7 +13,7 @@
     <artifactId>plugin-mermaidjs</artifactId>
     <packaging>lutece-plugin</packaging>
     
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Lutece mermaidjs plugin</name>
 
     <repositories>
@@ -48,13 +48,13 @@
     <properties>
         <componentName>mermaidjs</componentName>
         <jiraProjectName>MERMAIDJS</jiraProjectName>
-        <jiraComponentId></jiraComponentId>
+        <jiraComponentId />
     </properties>
     
     <scm>
         <connection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-mermaidjs.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-tech-plugin-mermaidjs.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-tech-plugin-mermaidjs.git</url>
-        <tag>HEAD</tag>
+        <tag>plugin-mermaidjs-1.0.0</tag>
     </scm>
 </project>
