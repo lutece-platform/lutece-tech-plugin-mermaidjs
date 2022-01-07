@@ -2,7 +2,7 @@
 <plug-in>
     <name>mermaidjs</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <documentation></documentation>
     <installation></installation>
     <changes></changes>
