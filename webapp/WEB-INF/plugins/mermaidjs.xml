@@ -2,7 +2,7 @@
 <plug-in>
     <name>mermaidjs</name>
     <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <documentation></documentation>
     <installation></installation>
     <changes></changes>
@@ -10,7 +10,7 @@
     <description>mermaidjs.plugin.description</description>
     <provider>mermaidjs.plugin.provider</provider>
     <provider-url>https://lutece.paris.fr</provider-url>
-    <icon-url>images/admin/plugins/mermaidjs/workflo-icon.png</icon-url>
+    <icon-url>images/admin/plugins/mermaidjs/workflow-icon.png</icon-url>
     <copyright>2021</copyright>
     <db-pool-required>1</db-pool-required>
     
