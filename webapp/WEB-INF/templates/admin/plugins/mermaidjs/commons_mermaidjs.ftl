@@ -11,17 +11,17 @@
 <script src="js/admin/lib/mermaid/svg-pan-zoom.js"></script>
 <style>
 #pane-graph .mermaid{
-       animation: mermaid-in  .5s ease-in-out .5s forwards;
+ animation: mermaid-in  .5s ease-in-out .5s forwards;
 }
 
 @keyframes  mermaid-in {
        0% {
-       filter: blur(4px);
-       opacity: 0;
+              filter: blur(4px);
+              opacity: 0;
        }
        100% {
-       filter: blur(0px);
-       opacity: 1;
+              filter: blur(0px);
+              opacity: 1;
        }
 }
 </style>
@@ -29,12 +29,12 @@
 </#if>
 <#assign mermaidIsLoaded = true />
 </#macro>
-<#macro initMermaidJs zoom=true>
+<#macro initMermaidJs zoom=true diagramName='diagram'>
 <#if mermaidIsInitialized?? && mermaidIsInitialized>
 <#else>
 <style>
 [id*="mermaid-"]:hover{
-       cursor: grab;
+ cursor: grab;
 }
 </style>
 <script>
@@ -66,53 +66,48 @@ window.onload = function() {
               ev.preventDefault()
               mermaidZoom.resetZoom()
        });
-       </#if>
+</#if>
 };
 
 // This SVG data is copied from
 // A data URL can also be generated from an existing SVG element.
 function svgDataURL(svg) {
-const svgAsXML = (new XMLSerializer).serializeToString(svg);
-return "data:image/svg+xml," + encodeURIComponent(svgAsXML);
+       const svgAsXML = (new XMLSerializer).serializeToString(svg);
+       return "data:image/svg+xml," + encodeURIComponent(svgAsXML);
 }
 
-$( function(){
-       $('.download-button').click( function(e){
-              const svg = document.querySelector('.mermaid > svg');
-              $(this).attr( "href", svgDataURL( svg ));
-              const fileName=document.querySelector('[name="name"]').value;
-              $(this).attr("download", fileName );
-       })          
-})
+document.addEventListener('DOMContentLoaded', function() {
+       document.querySelectorAll('.download-button').forEach(function(btn) {
+              btn.addEventListener('click', function(e) {
+                     const svg = document.querySelector('.mermaid > svg');
+                     if (!svg) return;
+                     btn.setAttribute("href", svgDataURL(svg));
+                     const nameInput = document.querySelector('[name="name"]');
+                     const fileName = nameInput ? nameInput.value : '${diagramName}.svg';
+                     btn.setAttribute("download", fileName);
+              });
+       });
+});
 </script>
 </#if>
 <#assign mermaidIsInitialized = true />
 </#macro> 
-<#macro mermaidGraph zoomControls=true zoomPos='top' zoomAlign='end' download=true>
-<#local align='justify-content-${zoomAlign} is-justify-content-${zoomAlign}' />
+<#macro mermaidGraph mdgraph=mdgraph zoomControls=true zoomPos='top' zoomAlign='end' download=true>
+<#local align='justify-content-${zoomAlign}' />
 <#if zoomPos='top'>
-<@div class='d-flex is-flex ${align} '>
-       <#if zoomControls>
-       <@mermaidToolBar />
-       </#if>
-       <#if download>
-              <a href="" class="btn btn-info btn-sm download-button" title="Download as SVG file." download="test.svg" target="_blank">
-                     <i class="fas fa-download"></i>
-              </a>
-       </#if>
+<@div class='d-flex ${align} '>
+<#if zoomControls><@mermaidToolBar /></#if>
+<#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params='download' /></#if>
 </@div>
 </#if>
-<@div class='mermaid' params=' style="opacity:0"'>${mdgraph}</@div>
+<@div class='mermaid'>
+${mdgraph}
+<#nested />
+</@div>
 <#if zoomPos !='top'>
-<@div class='d-flex is-flex ${align}'>
-       <#if zoomControls >
-       <@mermaidToolBar />
-       </#if>
-       <#if download>
-              <a href="" class="download-button" title="Download as SVG file." download>
-                     <i class="fas fa-download"></i>
-              </a>
-       </#if>
+<@div class='d-flex ${align}'>
+<#if zoomControls ><@mermaidToolBar /></#if>
+<#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params='download' /></#if>
 </@div>
 </#if>
 </#macro> 
@@ -126,9 +121,11 @@ $( function(){
 <@boxHeader title='#i18n{mermaidjs.help.title}'  />
 <@boxBody class='text-dark'>
 <@ul>
+<@li>
 #i18n{mermaidjs.help.info}
-<#if zoom>#i18n{mermaidjs.help.zoom}</#if>
-<#if download>#i18n{mermaidjs.help.download}</#if>
+<#if zoom> #i18n{mermaidjs.help.zoom}</#if>
+<#if download> #i18n{mermaidjs.help.download}</#if>
+</@li>
 </@ul>
 </@boxBody>
 </@box>

@@ -20,6 +20,6 @@
     </core-version-dependency>
 
     <freemarker-macro-files>
-        <freemarker-macro-file>/admin/plugins/mermaidjs/commons_mermaidjs.html</freemarker-macro-file>
+        <freemarker-macro-file>/admin/plugins/mermaidjs/commons_mermaidjs.ftl</freemarker-macro-file>
     </freemarker-macro-files>
 </plug-in>
