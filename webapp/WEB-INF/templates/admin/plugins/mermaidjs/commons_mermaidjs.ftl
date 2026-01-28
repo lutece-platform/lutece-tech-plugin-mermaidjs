@@ -3,7 +3,8 @@
  #      - create a DIV like <div class="mermaid" >graph TD (...)</div>
  #      - Call @initMermaidJs
 -->
-<#macro importMermaidJs zoom=true>
+<#macro importMermaidJs zoom=true deprecated...>
+<@deprecatedWarning args=deprecated />
 <#if mermaidIsLoaded?? && mermaidIsLoaded>
 <#else>
 <script src="js/admin/lib/mermaid/mermaid.min.js"></script>
@@ -15,57 +16,59 @@
 }
 
 @keyframes  mermaid-in {
-       0% {
-              filter: blur(4px);
-              opacity: 0;
-       }
-       100% {
-              filter: blur(0px);
-              opacity: 1;
-       }
+   0% {
+       filter: blur(4px);
+       opacity: 0;
+  }
+  100% {
+       filter: blur(0);
+       opacity: 1;
+   }
+}
+
+[id*="mermaid-"]:hover{
+       cursor: grab;
 }
 </style>
 </#if>
 </#if>
 <#assign mermaidIsLoaded = true />
 </#macro>
-<#macro initMermaidJs zoom=true diagramName='diagram'>
+<#macro initMermaidJs zoom=true diagramName='diagram' deprecated...>
+<@deprecatedWarning args=deprecated />
 <#if mermaidIsInitialized?? && mermaidIsInitialized>
 <#else>
-<style>
-[id*="mermaid-"]:hover{
- cursor: grab;
-}
-</style>
 <script>
 // Zoom management
 window.onload = function() {
-       var config = {
-              startOnLoad:true,
-              securityLevel:'loose',
-       };
-       mermaid.initialize(config);
-       <#if zoom>
-       window.mermaidZoom = svgPanZoom('[id*="mermaid-"]', {
-              zoomEnabled: true,
-              controlIconsEnabled: false,
-              fit: true,
-              // center: true,
-       });
-       document.getElementById('zoom-in').addEventListener('click', function(ev){
-              ev.preventDefault()
-              mermaidZoom.zoomIn()
-       });
+var config = {
+       startOnLoad:true,
+       securityLevel:'loose',
+};
+mermaid.initialize(config);
 
-       document.getElementById('zoom-out').addEventListener('click', function(ev){
-              ev.preventDefault()
-              mermaidZoom.zoomOut()
-       });
+<#if zoom>
+window.mermaidZoom = svgPanZoom('[id*="mermaid-"]', {
+       zoomEnabled: true,
+       controlIconsEnabled: false,
+       fit: true,
+       // center: true,
+});
 
-       document.getElementById('reset').addEventListener('click', function(ev){
-              ev.preventDefault()
-              mermaidZoom.resetZoom()
-       });
+document.getElementById('zoom-in').addEventListener( 'click', function(ev){
+       ev.preventDefault()
+       mermaidZoom.zoomIn()
+});
+
+document.getElementById('zoom-out').addEventListener( 'click', function(ev){
+       ev.preventDefault()
+       mermaidZoom.zoomOut()
+});
+
+document.getElementById('reset').addEventListener( 'click', function(ev){
+       ev.preventDefault()
+       mermaidZoom.resetZoom()
+});
 </#if>
 };
 
@@ -92,41 +95,39 @@ document.addEventListener('DOMContentLoaded', function() {
 </#if>
 <#assign mermaidIsInitialized = true />
 </#macro> 
-<#macro mermaidGraph mdgraph=mdgraph zoomControls=true zoomPos='top' zoomAlign='end' download=true>
+<#macro mermaidGraph mdgraph=mdgraph zoomControls=true zoomPos='start' zoomAlign='end' toolbarBtn='' download=true  deprecated...>
+<@deprecatedWarning args=deprecated />
 <#local align='justify-content-${zoomAlign}' />
-<#if zoomPos='top'>
-<@div class='d-flex ${align} '>
-<#if zoomControls><@mermaidToolBar /></#if>
-<#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params='download' /></#if>
-</@div>
-</#if>
-<@div class='mermaid'>
-${mdgraph}
-<#nested />
-</@div>
-<#if zoomPos !='top'>
-<@div class='d-flex ${align}'>
-<#if zoomControls ><@mermaidToolBar /></#if>
-<#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params='download' /></#if>
-</@div>
-</#if>
+<#local valign='align-items-${zoomPos}' />
+<@row>
+       <@columns xs=12 md=11>
+              <@div class='mermaid w-100'>
+                     ${mdgraph}
+              </@div>
+              <#nested />
+       </@columns>
+       <@columns>
+              <@div class='d-flex ${align} ${valign}'>
+                     <#if zoomControls><@mermaidToolBar zoom=zoomControls download=download toolbarBtn=toolbarBtn /></#if>
+                     <#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params='download' /></#if>
+              </@div>
+       </@columns>
+</@row>
 </#macro> 
-<#macro mermaidToolBar>
-<@button color='default' id='zoom-in' title='#i18n{mermaidjs.zoomIn}' buttonIcon='search-minus'  />
-<@button color='default' id='zoom-out' title='#i18n{mermaidjs.zoomOut}'  buttonIcon='search-plus' />
-<@button color='default' id='reset' title='#i18n{mermaidjs.reset}' buttonIcon='search' />
+<#macro mermaidToolBar zoom=true download=true toolbarBtn='' deprecated...>
+<@deprecatedWarning args=deprecated />
+<#local helpMsg><ul><li>#i18n{mermaidjs.help.info}</li><#if zoom><li>#i18n{mermaidjs.help.zoom}</li></#if><#if download><li>#i18n{mermaidjs.help.download}</li></#if></ul></#local>
+<@btnToolbar class='mb-3' vertical=true>
+<#if toolbarBtn !=''>${toolbarBtn}</#if>
+  <@button color='secondary' id='zoom-in' title='#i18n{mermaidjs.zoomIn}' buttonIcon='zoom-out' hideTitle=['all'] />
+  <@button color='secondary' id='zoom-out' title='#i18n{mermaidjs.zoomOut}'  buttonIcon='zoom-in' hideTitle=['all'] />
+  <@button color='secondary' id='reset' title='#i18n{mermaidjs.reset}' buttonIcon='zoom-cancel' hideTitle=['all'] />
+  <@button color='secondary' title='#i18n{mermaidjs.help.title}' buttonIcon='help-circle' hideTitle=['all']  params='data-bs-container="body" data-bs-toggle="popover" data-bs-html="true" data-bs-placement="bottom" data-bs-content="${helpMsg}"' />
+</@btnToolbar>
 </#macro> 
-<#macro mermaidHelp zoom=true download=true>
-<@box class='text-white bg-info'>
-<@boxHeader title='#i18n{mermaidjs.help.title}'  />
-<@boxBody class='text-dark'>
-<@ul>
-<@li>
-#i18n{mermaidjs.help.info}
-<#if zoom> #i18n{mermaidjs.help.zoom}</#if>
-<#if download> #i18n{mermaidjs.help.download}</#if>
-</@li>
-</@ul>
-</@boxBody>
-</@box>
+<#macro mermaidHelp zoom=true download=true deprecated...>
+<@deprecatedWarning args=deprecated />
+<@accordion id='mermaidHelp' title='#i18n{mermaidjs.help.title}' headerClass='h5' icon='help-circle' collapsed=true>
+<ul><li>#i18n{mermaidjs.help.info}</li><#if zoom><li>#i18n{mermaidjs.help.zoom}</li></#if><#if download><li>#i18n{mermaidjs.help.download}</li></#if></ul>
+</@accordion>
 </#macro> 
