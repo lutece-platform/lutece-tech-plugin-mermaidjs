@@ -12,7 +12,7 @@
 <script src="js/admin/lib/mermaid/svg-pan-zoom.js"></script>
 <style>
 #pane-graph .mermaid{
- animation: mermaid-in  .5s ease-in-out .5s forwards;
+ animation: mermaid-in 2s ease-in;
 }
 
 @keyframes  mermaid-in {
@@ -90,6 +90,9 @@ document.addEventListener('DOMContentLoaded', function() {
                      btn.setAttribute("download", fileName);
               });
        });
+       document.querySelectorAll('.mermaid').forEach(function(mermaid) {
+              mermaid.classList.remove('d-none');
+       });
 });
 </script>
 </#if>
@@ -101,9 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <#local valign='align-items-${zoomPos}' />
 <@row>
        <@columns xs=12 md=11>
-              <@div class='mermaid w-100'>
-                     ${mdgraph}
-              </@div>
+              <@div class='mermaid w-100 d-none'>${mdgraph}</@div>
               <#nested />
        </@columns>
        <@columns>
