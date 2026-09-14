@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <#macro mermaidToolBar zoom=true download=true toolbarBtn='' deprecated...>
 <@deprecatedWarning args=deprecated />
 <#local helpMsg><ul><li>#i18n{mermaidjs.help.info}</li><#if zoom><li>#i18n{mermaidjs.help.zoom}</li></#if><#if download><li>#i18n{mermaidjs.help.download}</li></#if></ul></#local>
+<#local helpMsg = helpMsg?markup_string>
 <@btnToolbar class='mb-3' vertical=true>
 <#if toolbarBtn !=''>${toolbarBtn}</#if>
   <@button color='secondary' id='zoom-in' title='#i18n{mermaidjs.zoomIn}' buttonIcon='zoom-out' hideTitle=['all'] />
