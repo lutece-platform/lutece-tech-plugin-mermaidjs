@@ -2,6 +2,8 @@
  #      - Call @importMermaidJs first
  #      - create a DIV like <div class="mermaid" >graph TD (...)</div>
  #      - Call @initMermaidJs
+ # @mermaidGraph: mdgraph is the Mermaid source, a text value written escaped (Mermaid reads the decoded text);
+ #      toolbarBtn is markup (a capture <#assign x>...</#assign> or a HtmlMarkup): a string is written as text.
 -->
 <#macro importMermaidJs zoom=true deprecated...>
 <@deprecatedWarning args=deprecated />
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      if (!svg) return;
                      btn.setAttribute("href", svgDataURL(svg));
                      const nameInput = document.querySelector('[name="name"]');
-                     const fileName = nameInput ? nameInput.value : '${diagramName}.svg';
+                     const fileName = nameInput ? nameInput.value : '${diagramName?js_string?no_esc}.svg';
                      btn.setAttribute("download", fileName);
               });
        });
@@ -110,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
        <@columns>
               <@div class='d-flex ${align} ${valign}'>
                      <#if zoomControls><@mermaidToolBar zoom=zoomControls download=download toolbarBtn=toolbarBtn /></#if>
-                     <#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params='download' /></#if>
+                     <#if download><@link href='' class='btn btn-info download-button' label='#i18n{mermaidjs.download.title}' title='#i18n{mermaidjs.download.title}' target='_blank' params={"download": true} /></#if>
               </@div>
        </@columns>
 </@row>
@@ -119,11 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <@deprecatedWarning args=deprecated />
 <#local helpMsg><ul><li>#i18n{mermaidjs.help.info}</li><#if zoom><li>#i18n{mermaidjs.help.zoom}</li></#if><#if download><li>#i18n{mermaidjs.help.download}</li></#if></ul></#local>
 <@btnToolbar class='mb-3' vertical=true>
-<#if toolbarBtn !=''>${toolbarBtn}</#if>
+<#if toolbarBtn?has_content>${toolbarBtn}</#if>
   <@button color='secondary' id='zoom-in' title='#i18n{mermaidjs.zoomIn}' buttonIcon='zoom-out' hideTitle=['all'] />
   <@button color='secondary' id='zoom-out' title='#i18n{mermaidjs.zoomOut}'  buttonIcon='zoom-in' hideTitle=['all'] />
   <@button color='secondary' id='reset' title='#i18n{mermaidjs.reset}' buttonIcon='zoom-cancel' hideTitle=['all'] />
-  <@button color='secondary' title='#i18n{mermaidjs.help.title}' buttonIcon='help-circle' hideTitle=['all']  params='data-bs-container="body" data-bs-toggle="popover" data-bs-html="true" data-bs-placement="bottom" data-bs-content="${helpMsg}"' />
+  <@button color='secondary' title='#i18n{mermaidjs.help.title}' buttonIcon='help-circle' hideTitle=['all']  params={"data-bs-container": "body", "data-bs-toggle": "popover", "data-bs-html": "true", "data-bs-placement": "bottom", "data-bs-content": helpMsg} />
 </@btnToolbar>
 </#macro> 
 <#macro mermaidHelp zoom=true download=true deprecated...>
