@@ -45,7 +45,7 @@
 window.onload = function() {
 var config = {
        startOnLoad:true,
-       securityLevel:'loose',
+       securityLevel:'strict',
 };
 mermaid.initialize(config);
 
