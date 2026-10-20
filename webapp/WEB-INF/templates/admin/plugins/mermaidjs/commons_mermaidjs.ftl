@@ -28,7 +28,7 @@
    }
 }
 
-[id*="mermaid-"]:hover{
+.mermaid > svg:hover{
        cursor: grab;
 }
 </style>
@@ -41,38 +41,46 @@
 <#if mermaidIsInitialized?? && mermaidIsInitialized>
 <#else>
 <script>
-// Zoom management
-window.onload = function() {
-var config = {
-       startOnLoad:true,
-       securityLevel:'strict',
-};
-mermaid.initialize(config);
+// Mermaid renders asynchronously: disable the automatic rendering on load and run it explicitly,
+// then attach the zoom to the rendered SVG.
+mermaid.initialize({
+       startOnLoad: false,
+       securityLevel: 'strict',
+       layout: 'dagre',
+       theme: 'default',
+       look: 'classic',
+});
 
+window.addEventListener('load', function() {
+       mermaid.run({ querySelector: '.mermaid' }).then(function() {
 <#if zoom>
-window.mermaidZoom = svgPanZoom('[id*="mermaid-"]', {
-       zoomEnabled: true,
-       controlIconsEnabled: false,
-       fit: true,
-       // center: true,
-});
-
-document.getElementById('zoom-in').addEventListener( 'click', function(ev){
-       ev.preventDefault()
-       mermaidZoom.zoomIn()
-});
-
-document.getElementById('zoom-out').addEventListener( 'click', function(ev){
-       ev.preventDefault()
-       mermaidZoom.zoomOut()
-});
-
-document.getElementById('reset').addEventListener( 'click', function(ev){
-       ev.preventDefault()
-       mermaidZoom.resetZoom()
-});
+              const svg = document.querySelector('.mermaid > svg');
+              if (!svg) return;
+              // svg-pan-zoom drops the viewBox the height is computed from: keep the diagram height
+              if (!svg.getAttribute('height') && svg.viewBox.baseVal) {
+                     svg.setAttribute('height', svg.viewBox.baseVal.height);
+              }
+              window.mermaidZoom = svgPanZoom(svg, {
+                     zoomEnabled: true,
+                     controlIconsEnabled: false,
+                     fit: true,
+              });
+              const bindZoom = function(id, action) {
+                     const btn = document.getElementById(id);
+                     if (!btn) return;
+                     btn.addEventListener('click', function(ev) {
+                            ev.preventDefault();
+                            action();
+                     });
+              };
+              bindZoom('zoom-in', function() { mermaidZoom.zoomIn(); });
+              bindZoom('zoom-out', function() { mermaidZoom.zoomOut(); });
+              bindZoom('reset', function() { mermaidZoom.resetZoom(); });
 </#if>
-};
+       }).catch(function(err) {
+              console.error('Mermaid rendering failed', err);
+       });
+});
 
 // This SVG data is copied from
 // A data URL can also be generated from an existing SVG element.
