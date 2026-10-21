@@ -67,12 +67,17 @@ window.addEventListener('load', function() {
               svg.style.maxWidth = 'none';
               svg.setAttribute('width', '100%');
               svg.setAttribute('height', frameHeight);
-              // A diagram larger than the frame is fitted into it, a smaller one keeps its size: both centered
+              // A diagram larger than the frame is fitted into it. A smaller one keeps its own size: the viewBox is widened to
+              // the frame around it, else svg-pan-zoom would stretch the viewBox to the frame and enlarge the diagram
               const frameWidth = svg.getBoundingClientRect().width;
+              if (box && box.width > 0 && box.width <= frameWidth && box.height <= frameHeight) {
+                     svg.setAttribute('viewBox', [box.x - (frameWidth - box.width) / 2, box.y - (frameHeight - box.height) / 2,
+                            frameWidth, frameHeight].join(' '));
+              }
               window.mermaidZoom = svgPanZoom(svg, {
                      zoomEnabled: true,
                      controlIconsEnabled: false,
-                     fit: !!box && (box.width > frameWidth || box.height > frameHeight),
+                     fit: true,
                      center: true,
               });
               // Toolbar: zoom and keyboard alternative to dragging the diagram (WCAG 2.5.7, 2.1.1)
