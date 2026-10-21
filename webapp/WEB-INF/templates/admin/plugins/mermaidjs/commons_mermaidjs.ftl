@@ -59,14 +59,21 @@ window.addEventListener('load', function() {
 <#if zoom>
               const svg = document.querySelector('.mermaid > svg');
               if (!svg) return;
-              // svg-pan-zoom drops the viewBox the height is computed from: keep the diagram height
-              if (!svg.getAttribute('height') && svg.viewBox.baseVal) {
-                     svg.setAttribute('height', svg.viewBox.baseVal.height);
-              }
+              // Mermaid limits the SVG to the size of the diagram (max-width), so a zoom or a pan hid the diagram
+              // behind a frame of its own size: the frame takes the width of the column and at least 60% of the
+              // window height (svg-pan-zoom drops the viewBox the height was computed from)
+              const box = svg.viewBox.baseVal;
+              const frameHeight = Math.max(box ? box.height : 0, Math.round(window.innerHeight * 0.6));
+              svg.style.maxWidth = 'none';
+              svg.setAttribute('width', '100%');
+              svg.setAttribute('height', frameHeight);
+              // A diagram larger than the frame is fitted into it, a smaller one keeps its size: both centered
+              const frameWidth = svg.getBoundingClientRect().width;
               window.mermaidZoom = svgPanZoom(svg, {
                      zoomEnabled: true,
                      controlIconsEnabled: false,
-                     fit: true,
+                     fit: !!box && (box.width > frameWidth || box.height > frameHeight),
+                     center: true,
               });
               // Toolbar: zoom and keyboard alternative to dragging the diagram (WCAG 2.5.7, 2.1.1)
               const mermaidPanStep = 50;
